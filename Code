@@ -1,0 +1,70 @@
+import numpy as np
+import pandas as pd
+
+# Number of data points
+num_points = 50000
+
+# Define age intervals
+age_intervals = [20, 30, 40, 50, 60]
+
+# Generate random ages
+ages = np.random.choice(age_intervals, num_points)
+
+# Create a DataFrame
+df = pd.DataFrame({
+    'age': ages
+})
+
+# Count the number of individuals in each age group
+age_distribution = df['age'].value_counts().sort_index()
+
+# Display the age distribution
+print("\nAge Distribution:")
+print(age_distribution)
+
+purchase_probabilities = {
+    20: 0.10,  # 10% chance
+    30: 0.20,  # 20% chance
+    40: 0.30,  # 30% chance
+    50: 0.40,  # 40% chance
+    60: 0.50   # 50% chance
+}
+purchases = np.array([np.random.rand() < purchase_probabilities[age] for age in ages])
+
+df1 = pd.DataFrame({
+    'age': ages,
+    'purchase': purchases
+})
+
+print(df1.head())
+purchasers = df1[df1['purchase']]
+print(f"Total number of purchasers: {purchasers.shape[0]}")
+
+purchasers_by_age = df1[df1['purchase']].groupby('age').size()
+print("\nTotal Number of Purchasers by Age Group:")
+print(purchasers_by_age)
+# Calculate the probability of being 50 years old
+P_B = (df1['age'] == 50).mean()
+print(P_B)
+P_A_and_B = ((df1['age'] == 50) & (df1['purchase'] == True)).mean()
+print(P_A_and_B)
+P_A_given_B = P_A_and_B / P_B
+print(P_A_given_B)
+# Generate purchases based on uniform probability
+uniform_purchases = {
+    20: 0.2,  # 10% chance
+    30: 0.2,  # 20% chance
+    40: 0.2,  # 30% chance
+    50: 0.2,  # 40% chance
+    60: 0.2   # 50% chance
+}
+purchases1 =([np.random.rand() < uniform_purchases[age] for age in ages])
+df2 = pd.DataFrame({'age': ages, 'purchase': purchases1})
+P_B1 = (df2['age'] == 50).mean()
+print(P_B1)
+
+P_A_and_B = ((df2['age'] == 50) & (df2['purchase'] == True)).mean()
+print(P_A_and_B)
+
+P_A_given_B = P_A_and_B / P_B
+print(P_A_given_B)
